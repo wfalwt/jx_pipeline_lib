@@ -1,4 +1,4 @@
-package ci.infra.pipeline;
+package ci.infra.pipeline
 
 class ImageBuild extends BaseBuild{
     String releaseImage

@@ -1,27 +1,27 @@
-## Repository jx_common_pl (Jenkins common pipeline library)
-### 流水线说明
-####  scmPipeline 基于源代码进行构建的流水线
-scmPipeline 使用 ci.infra.pipeline.ScmBuild 作为构建参数，主要属性如下：
+####  scmPipeline Pipeline base on SCM 
+scmPipeline using **ci.infra.pipeline.ScmBuild**  as parameter properties ：
 
-属性 | 是否必须 | 说明                         |
--- |------|----------------------------|
-buildEnv | 是    | 构建节点，可选择（test,deploy [^1]) |
-repository | 是    | 源代码仓库地址，目前只支持gitlab        |
-repositoryCredentialsId | 否 | 源代码使用账户Id                  |
-repositoryBranch | 是 | 签出代码的分支名称                  |
-buildName | 否 | 构建名称，等同于env.JOB_NAME       |
-buildImage | 是 | 构建的镜像全路径（包括主机地址）           |
-buildDescription | 否 | 构建描述信息                     |
-k8sNamespace | 是 | 需要发布的部署所在的命名空间             |
-k8sDeployment | 是 | 发布的部署名                     |
-k8sContainer | 是 | 发布的部署的容器名                  | 
+prop | required | mark                                               |
+-- |----------|----------------------------------------------------|
+buildEnv | Yes      | Jenkins node server name，options（test,deploy [^1]) |
+repository | Yes      | repository ，support Git currently                  |
+repositoryCredentialsId | No       | credentials id for repository in Jenkins           |
+repositoryBranch | Yes      | branch name of repository to checkout              |
+buildName | No       | build name, like env.JOB_NAME                      |
+buildImage | Yes      | docker image to build （include hostname）           |
+buildDescription | No       | description information with this build            |
+skipDeploy | No | if skip to deploy, default no                      
+remoteServerName | No | remote server info in Jenkins to deploy            
+k8sNamespace | Yes      | namespace of app in k8s                            |
+k8sDeployment | Yes      | deployment name of app in k8s                      |
+k8sContainer | Yes      | container name of app in k8s                       | 
 
 
-[^1]: test 对应的是测试环境的部署，deploy对应的是生成环境的部署
+[^1]: test test env，deploy prod env
 
 #### imageTagPipeline
 ### Use case
--  add repository to jenkins share library as mindforce-ci-lib with version master
+-  add repository to jenkins share library as ci_pipeline_lib with version master
 -  build with source code from repository
 
 ```groovy
@@ -36,7 +36,7 @@ buildInfo.setBuildTool("maven")
 buildInfo.setBuildImage("goharbor.com/build/app1")
 buildInfo.setDockerfile("DockerFile")
 buildInfo.setK8sNamespace("apps")
-buildInfo.setSkipDeploy(true)
+buildInfo.setSkipDeploy(true) //skip to deploy,which means setting k8s info useless
 buildInfo.setK8sDeployment("app1")
 buildInfo.setK8sContainer("app1")
 scmPipeline(buildInfo)
