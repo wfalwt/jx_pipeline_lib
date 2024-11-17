@@ -1,0 +1,4 @@
+{
+  "node20.image": "docker.io/library/node:20.11.1",
+  "node18.image": "docker.io/library/node:18.20.4"
+}

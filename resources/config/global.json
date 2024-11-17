@@ -1,0 +1,9 @@
+{
+    "docker.build_kit": "enabled",
+    "docker.server": "tcp://dockerserver:2375",
+    "docker.registry": "https://goharbor.com",
+    "docker.registry.credentials": "harbor-credentials",
+    "repository.credentials": "gitlab-credentials",
+    "repository.commit_id.var": "ci.infra.pipeline.commit",
+    "repository.build_id.var": "ci.infra.pipeline.build"
+}

@@ -1,0 +1,47 @@
+@Library("mindforce-ci-lib@master") _
+
+def usefulTools = new ci.infra.pipeline.tools()
+pipeline {
+    agent {
+        node {
+            label 'test'
+        }
+    }
+    stages {
+        stage('init env') {
+            steps {
+                initEnv buildImage:"test-lib-image",repository:"https://github.com/xxx/xx.git"
+            }
+        }
+        stage('check environment') {
+            steps {
+                echo "build node : ${NODE_NAME}"
+                echo "jenkins workspace:  ${WORKSPACE}"
+                echo "current build tag:  ${BUILD_TAG}"
+                echo "repository: ${repository} target image : ${imageBuildTag}"
+            }
+        }
+        stage('checkout from repository'){
+            steps {
+                sendWxNotification "jx-lib 测试发布中，请暂停使用"
+                script {
+                    usefulTools.checkoutSourceFromGit("develop")
+                }
+            }
+        }
+        stage('build code with maven') {
+            steps {
+                script {
+                    usefulTools.buildCodeWithMaven(true)
+                }
+            }
+        }
+        stage('build docker image ') {
+            steps {
+                script {
+                    usefulTools.buildDockerImage("DockerFile")
+                }
+            }
+        }
+     }
+}
